@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cronômetro até Terça 12h30</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: #f5f5f5;
+      text-align: center;
+    }
+    #phrase {
+      font-size: 1.6rem;
+      margin-bottom: 20px;
+      max-width: 800px;
+    }
+    #timer {
+      font-size: 2rem;
+      font-weight: bold;
+      background: #fff;
+      padding: 20px 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      display: inline-block;
+      margin-bottom: 30px;
+    }
+    .heart {
+      font-size: 5rem;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="phrase">Faltam exatamente <span id="timer">...</span> para eu encontrar meu amorzinho</div>
+  <div class="heart">❤️</div>
+
+  <script>
+    function getNextTuesday1230() {
+      const now = new Date();
+      const target = new Date(now);
+
+      let daysToTuesday = (2 - now.getDay() + 7) % 7;
+
+      if (daysToTuesday === 0 && now.getHours() * 60 + now.getMinutes() >= 12 * 60 + 30) {
+        daysToTuesday = 7;
+      }
+
+      target.setDate(now.getDate() + daysToTuesday);
+      target.setHours(12, 30, 0, 0);
+      return target;
+    }
+
+    function updateTimer() {
+      const now = new Date();
+      const target = getNextTuesday1230();
+      const diff = target - now;
+
+      if (diff <= 0) {
+        document.getElementById("timer").innerText = "chegou o momento!";
+        return;
+      }
+
+      const totalSeconds = Math.floor(diff / 1000);
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      document.getElementById("timer").innerText =
+        `${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    setInterval(updateTimer, 1000);
+    updateTimer();
+  </script>
+</body>
+</html>
